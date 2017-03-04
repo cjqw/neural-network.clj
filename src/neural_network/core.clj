@@ -1,4 +1,5 @@
 (ns neural-network.core
+  (:require [neural-network.transport-function :as fun])
   (:gen-class))
 
 (defn -main

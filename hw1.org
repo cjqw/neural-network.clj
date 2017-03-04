@@ -1,0 +1,117 @@
+#+TITLE: HW1-Report
+#+AUTHOR: Qiu Wei
+* Problem 1
+** 1
+file:imgs/ans1-1.png
+
+\lambda = [0,-1]
+c = 0.5
+
+a = hardlim(p) = hardlim(Wp + b)
+= hardlim
+( \left[
+ \begin{matrix}
+ 0 & -1
+  \end{matrix}
+  \right] p - 0.5)
+** 2
+|----+----------+---+---|
+| p  | position | a | t |
+|----+----------+---+---|
+| p1 | (1,-1)   | 1 | 1 |
+| p2 | (-1,-1)  | 1 | 1 |
+| p3 | (0,0)    | 0 | 0 |
+| p4 | (1,0)    | 0 | 0 |
+|----+----------+---+---|
+** 3
+|----+----------+---|
+| p  | position | a |
+|----+----------+---|
+| p5 | (-2,0)   | 0 |
+| p6 | (1,1)    | 0 |
+| p7 | (0,1)    | 0 |
+| p8 | (-1,-2)  | 1 |
+|----+----------+---|
+** 4
+file:imgs/ans1-4.png
+
+Since the single-neuron machine can only separete the space
+with a hyperplane (in this case is seperating the plane with a
+straight line), only the points in area S1 and S1 will be
+grouped no matter how we choose W and b.
+
+The points are: P6 P7 and P8
+** 5
+
+#+BEGIN_SRC
+No. 0 : w =  [0 0] b =  0  data =  [1 -1] t =  1
+No. 1 : w =  [0 0] b =  0  data =  [-1 -1] t =  1
+No. 2 : w =  [0 0] b =  0  data =  [0 0] t =  0
+No. 3 : w =  [0 0] b =  -1  data =  [1 0] t =  0
+No. 4 : w =  [0 0] b =  -1  data =  [1 -1] t =  1
+No. 5 : w =  [1 -1] b =  0  data =  [-1 -1] t =  1
+No. 6 : w =  [1 -1] b =  0  data =  [0 0] t =  0
+No. 7 : w =  [1 -1] b =  -1  data =  [1 0] t =  0
+No. 8 : w =  [0 -1] b =  -2  data =  [1 -1] t =  1
+No. 9 : w =  [1 -2] b =  -1  data =  [-1 -1] t =  1
+No. 10 : w =  [1 -2] b =  -1  data =  [0 0] t =  0
+No. 11 : w =  [1 -2] b =  -1  data =  [1 0] t =  0
+No. 12 : w =  [0 -2] b =  -2  data =  [1 -1] t =  1
+No. 13 : w =  [0 -2] b =  -2  data =  [-1 -1] t =  1
+No. 14 : w =  [0 -2] b =  -2  data =  [0 0] t =  0
+No. 15 : w =  [0 -2] b =  -2  data =  [1 0] t =  0
+{:w [0 -2], :b -2}
+#+END_SRC
+
+The result is :
+
+|----+----------+---|
+| p  | position | a |
+|----+----------+---|
+| p5 | (-2,0)   | 0 |
+| p6 | (1,1)    | 0 |
+| p7 | (0,1)    | 0 |
+| p8 | (-1,-2)  | 1 |
+|----+----------+---|
+* Probelm 2
+** Initial State
+w =  \left[
+ \begin{matrix}
+ 1 & 1
+  \end{matrix}
+  \right]
+
+b = 1
+** Result
+file:imgs/ans2.png
+
+The base of logarithm is e.
+
+
+The result of perception machine is:
+
+file:imgs/ans1-5.png
+
+The result of LMS algorithm when alpha = 0.1 (which get the best result) is:
+
+
+file:imgs/ans2-2.png
+** Analyse
+
+The difference between the two algorithm is,
+The perception machine halts once all the input can get correct answer(as it use hardlim),
+while the LMS will continue to adapt to the data to reduce E[e^{2}].
+
+So perception machine is more likely to get a rough line which just seperate the classes.
+
+While LMS also get such a line which do not seperate the points "averagely".But the reason is
+we set t \in {0,1} so LMS will try to put the line cross zero points.In addition,I mapped t_i
+from {0,1} to {-1 1} and get a beautiful result:
+
+file:imgs/ans2-addition.png
+
+By the way,LMS get a similar answer with perception machine when alpha = 0.5.
+The reason is each step is too large so the algorithm get traped.
+See:
+
+file:imgs/ans2-3.png

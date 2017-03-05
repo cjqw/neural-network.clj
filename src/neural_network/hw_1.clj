@@ -1,10 +1,9 @@
-(ns neural-network.hw1-1
+(ns neural-network.hw-1
   (:require [neural-network.chart :as ch]
             [clojure.repl :as r]
             [incanter.core :as in])
   (:use [incanter stats charts]
-        [neural-network.transport-function])
-  )
+        [neural-network.mathematic-function]))
 
 (defn- point
   [x y t]
@@ -54,7 +53,7 @@
      :b (+ b e)
      :flag (and flag (zero? e))}))
 
-(defn- train-single-neuron
+(defn- train-perception
   [para data-set]
   (let [net (assoc para :flag true)
         result (reduce pass-data net data-set)
@@ -65,10 +64,11 @@
 
 (defn solve1-5
   []
-  (let [result (train-single-neuron
+  (let [result (train-perception
                 {:times 0 :w [0 0] :b 0 :flag true}
                 [p1 p2 p3 p4])]
-    (-> (ch/build-data-chart [p1 p2 p3 p4] :title "Perception Machine")
+    (-> (ch/build-data-chart [p1 p2 p3 p4]
+                             :title "Perception Machine")
         (ch/add-straight-line-to-data-chart
          (:w result)
          (- 0 (:b result))
@@ -97,12 +97,10 @@
 
 (def avg-map (fn [s f] (/ (reduce + (mapv f s)) (count s))))
 
-(def square (fn [x] (* x x)))
-
 (defn update-e
   [para data-set]
   (let [e (:e para)
-        f #(square (- (:value %) (calc-lms para %)))
+        f #(fun/square (- (:value %) (calc-lms para %)))
         new-e (Math/log (avg-map data-set f))]
     (assoc para :e (conj e new-e))
     ))

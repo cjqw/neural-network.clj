@@ -1,0 +1,39 @@
+* notations
+** basic functions
+*** hardlim
+hard limit transfer function
+hardlin(n) =
+1 if n >= 0
+0 if n < 0
+*** hardlims
+hardlin(n) =
+1 if n >= 0
+-1 if n < 0
+*** purelin
+pure line transfer function
+purelin(n) = n
+*** poslin
+a = 0 , n < 0
+a = n , n >= 0
+*** satlin
+satlin(n) =
+- 0, if n <= 0;
+- n, if 0 <= n <= 1;
+- 1, if 1 <= n.
+*** satlins
+satlins(n) =
+- -1, if n <= -1;
+- n, if -1 <= n <= 1;
+- 1, if 1 <= n.
+*** logsig/sigmoid
+log-sigmoid transfer function
+logsig(n) = 1 / (1 + exp(-n))
+*** tansig
+$$ a = \frac{e^n-e^{-n}}{e^n+e^{-n}}$$
+*** compet
+a = 1, 同一层具有最大 n 的神经元
+a = 0, 其他神经元
+*** delay
+a(t) = u(t-1)
+*** integrato
+$$ a(t) = \int_{0}^{\tau} u(\tau)d\tau + a(0) $$

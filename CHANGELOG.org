@@ -5,5 +5,6 @@ This change log follows the conventions of [[http://keepachangelog.com/][keepach
 
 ** 0.1.0 - 2017-03-01
 *** Added
-- Files from the new template.
-- Support result chart via incanter
+- 2017-03-01 Files from the new template.
+- 2017-03-01 Support result chart via incanter
+- 2017-03-04 finish hw1

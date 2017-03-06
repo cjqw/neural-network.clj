@@ -20,6 +20,23 @@
   [{u :u v :v} in]
   (mat/+ (mmul u (square in)) (mmul v in)))
 
+(defn build-layer
+  "Build the structure of a layer.
+
+  Options:
+  :sqr whether square the input in each layer (default false)
+  :rand initialize the matrix with random values (default false)
+        the ceil of random function is the value of rand option.
+"
+  [in out f & options]
+  (let [opt (apply hash-map options)
+        sqr (:sqr opt)
+        rand (:rand opt)                ;TO BE ADDED
+        b (repeat-v out 0)
+        mat (repeat-v out (repeat-v in 0))]
+    {:f f :b b :sqr sqr
+     :mat (if sqr {:u mat :v mat} mat)}))
+
 (defn pass-layer
   "Send a input to a layer and return the output.
 
@@ -31,19 +48,18 @@
         in (if sqr (sqr-mul w input) (mmul w input))]
     (emap f (mat/+ in b))))
 
-(defn build-layer
-  "Build the structure of a layer.
+(defn run-machine
+  "Apply the net with the input and return the output.
+  If the last layer have just one neuron, return a number.
+  Otherwise return a vector.
 
-  Options:
-  :sqr whether square the input in each layer (default false)
-"
-  [in out f & options]
-  (let [opt (apply hash-map options)
-        sqr (:sqr opt)
-        b (repeat-v out 0)
-        mat (repeat-v out (repeat-v in 0))]
-    {:f f :b b :sqr sqr
-     :mat (if sqr {:u mat :v mat} mat)}))
+  The net should be a sequence layers"
+  [net input]
+  (let [result (reduce (fn [in layer] (pass-layer in layer))
+                       input net)]
+    (if (= 1 (count result))
+      (first result)
+      result)))
 
 ;; (defn tune-machine
 ;;   "Need a bf function in machine.
@@ -59,19 +75,6 @@
 ;;         new-net (reduce bp e (reverse net))]
 ;;     (assoc machine :net new-net)))
 
-;; (defn run-machine
-;;   "Apply the net with the input and return the output.
-;;   If the last layer have just one neuron, return a number.
-;;   Otherwise return a vector."
-;;   [machine input]
-;;   (let [net (:net machine)
-;;         sqr (:sqr machine)
-;;         f (:forward machine)
-;;         result (reduce (fn [in layer] (pass-layer in layer f :sqr sqr))
-;;                        input net)]
-;;     (if (= 1 (count result))
-;;       (first result)
-;;       result)))
 
 ;; (defn build-machine
 ;;   "Build the structure of neural network

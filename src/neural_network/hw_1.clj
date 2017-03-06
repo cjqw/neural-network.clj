@@ -100,7 +100,7 @@
 (defn update-e
   [para data-set]
   (let [e (:e para)
-        f #(fun/square (- (:value %) (calc-lms para %)))
+        f #(square (- (:value %) (calc-lms para %)))
         new-e (Math/log (avg-map data-set f))]
     (assoc para :e (conj e new-e))
     ))

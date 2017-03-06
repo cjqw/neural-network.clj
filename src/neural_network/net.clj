@@ -1,13 +1,6 @@
 (ns neural-network.net
   (:require [clojure.core.matrix.operators :as mat])
-  (:use [clojure.repl]
-        [clojure.core.matrix]))
-
-;; (def s [1])
-;; (def f identity)
-;; (def in 2)
-
-;;; Test data above
+  (:use [clojure.core.matrix]))
 
 (def consv (comp (partial apply vector) cons))
 
@@ -60,34 +53,3 @@
     (if (= 1 (count result))
       (first result)
       result)))
-
-;; (defn tune-machine
-;;   "Need a bf function in machine.
-;;   Tune the machine with given input and answer.
-
-;;   The input of bp should be:
-;;   [error layer]
-;;   "
-;;   [machine input answer]
-;;   (let [e (- answer (run-machine machine input))
-;;         net (:net machine)
-;;         bp (:bp machine)
-;;         new-net (reduce bp e (reverse net))]
-;;     (assoc machine :net new-net)))
-
-
-;; (defn build-machine
-;;   "Build the structure of neural network
-
-;;   Options:
-;;   :bp-function backpropagation function
-;;   :net origin weight net (default zero matrix)
-;;   :sqr whether square the input in each layer (default false)
-;;   "
-;;   [s f in & options]
-;;   (let [opt (apply hash-map options)
-;;         bp (:bp-function opt)
-;;         sqr (:sqr opt)
-;;         net (or (:net opt) (mapv #(build-layer % :sqr sqr)
-;;                                  (compose-v (pop (consv in s)) s)))]
-;;     {:forward f :bp bp :sqr sqr :net net}))

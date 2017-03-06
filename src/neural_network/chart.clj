@@ -1,7 +1,5 @@
 (ns neural-network.chart
-  (:require [incanter.core :as in]
-            [clojure.repl :as r]
-            )
+  (:require [incanter.core :as in])
   (:use [incanter stats charts]))
 
 

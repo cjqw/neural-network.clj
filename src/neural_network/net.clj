@@ -1,17 +1,15 @@
 (ns neural-network.net
-  (:require [clojure.core.matrix.operators :as mat])
-  (:use [clojure.core.matrix]))
-
-(def consv (comp (partial apply vector) cons))
-
-(def compose-v (fn [s1 s2] (mapv (fn [x y] [x y]) s1 s2)))
-
-(def repeat-v (fn [n f] (apply vector (take n (repeat f)))))
-
+  (:require [clojure.core.matrix.operators :as mat]
+            [clojure.core.matrix :as m])
+  (:use [neural-network.util]))
 
 (defn- sqr-mul
   [{u :u v :v} in]
-  (mat/+ (mmul u (square in)) (mmul v in)))
+  (mat/+ (m/mmul u (m/square in)) (m/mmul v in)))
+
+(defn- randomize
+  [m]
+  (m/emap (fn [x] (- (rand 2) 1)) m))
 
 (defn build-layer
   "Build the structure of a layer.
@@ -27,8 +25,10 @@
         rand (:rand opt)                ;TO BE ADDED
         b (repeat-v out 0)
         mat (repeat-v out (repeat-v in 0))]
-    {:f f :b b :sqr sqr
-     :mat (if sqr {:u mat :v mat} mat)}))
+    {:f f :b (randomize b) :sqr sqr
+     :mat (if sqr {:u (randomize mat)
+                   :v (randomize mat)}
+              (randomize mat))}))
 
 (defn pass-layer
   "Send a input to a layer and return the output.
@@ -38,18 +38,22 @@
   [input {b :b w :mat fun :f sqr :sqr} & options]
   (let [opt (apply hash-map options)
         f (or (:f opt) fun)
-        in (if sqr (sqr-mul w input) (mmul w input))]
-    (emap f (mat/+ in b))))
+        in (if sqr (sqr-mul w input) (m/mmul w input))]
+    (m/emap f (mat/+ in b))))
 
 (defn run-machine
-  "Apply the net with the input and return the output.
-  If the last layer have just one neuron, return a number.
-  Otherwise return a vector.
-
+  "Apply the net with the input and calculate the output.
+  The result of each layer will be stored with :x key.
+  The returned value is [output, new-net].
   The net should be a sequence layers"
   [net input]
-  (let [result (reduce (fn [in layer] (pass-layer in layer))
-                       input net)]
-    (if (= 1 (count result))
-      (first result)
-      result)))
+  (let [initial [input,[]]]
+    (reduce
+     (fn [prev layer]
+       (let [input (first prev)
+             net (second prev)
+             output (pass-layer input layer)
+             new-layer (assoc layer :x output)]
+         [output,(conj net new-layer)]))
+     initial net
+     )))

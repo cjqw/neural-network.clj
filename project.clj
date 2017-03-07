@@ -4,9 +4,8 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/math.numeric-tower "0.0.4"]
                  [net.mikera/core.matrix "0.57.0"]
-                 [clatrix "0.5.0"]
+                 [instaparse "1.4.5"]
                  [incanter "1.5.7"]]
   :main ^:skip-aot neural-network.core
   :target-path "target/%s"

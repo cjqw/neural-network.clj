@@ -1,0 +1,100 @@
+#+TITLE: HW2-REPORT
+
+* MLQP Analyse
+** Forward
+$$ x_i^{k} = f^{k}(n^{k}_i) $$
+$$ n^{k}_i = b^{k}_i + \sum_{j=1}^{N^{k-1}}(u^{k}_{i,j} (x^{k-1}_j)^2 + v^{k}_{i,j} x^{k-1}_j )$$
+
+** Backpropagation
+Let:
+
+$$ s^k_i = \frac{\partial F}{\partial n^k_i}$$
+
+Then:
+
+$$ u^k_{i,j}(l+1) = u^k_{i,j}(l) - \alpha s^k_i \frac{\partial n^k_i}{\partial u^k_{i,j}}
+                  = u^k_{i,j}(l) - \alpha s^k_i (x^{k-1}_j)^2$$
+$$ v^k_{i,j}(l+1) = v^k_{i,j}(l) - \alpha s^k_i \frac{\partial n^k_i}{\partial v^k_{i,j}}
+                  = v^k_{i,j}(l) - \alpha s^k_i x^{k-1}_j$$
+$$ b^k_{i,j}(l+1) = b^k_{i,j}(l) - \alpha s^k_i \frac{\partial n^k_i}{\partial b^k_{i,j}}
+                  = b^k_{i,j}(l) - \alpha s^k_i $$
+
+Now calculate $s^k$ :
+
+$$ s^k = \frac{\partial F}{\partial n^k} = \frac{\partial F}{\partial n^{k+1}} \frac{\partial n^{k+1}}{\partial n^k}
+= s^{k+1} \frac{\partial n^{k+1}}{\partial n^k}$$
+
+To calculate the Jacobbi's matrix
+
+$$ J^k = \frac{\partial n^{k+1}}{\partial n^k} $$
+
+We have:
+
+$$ J^k_{i,j} = \frac{\partial n^{k+1}_i}{\partial n^k_j}
+= \frac{\partial( b^{k+1}_i + \sum_{l=1}^{N^{k}}(u^{k+1}_{i,l} (x^{k}_l)^2 + v^{k+1}_{i,l} x^{k}_l) )}{\partial n^k_j}
+= (2 x^k_j u^{k+1}_{i,j} + v^{k+1}_{i,j}) \frac{\partial x^k_j}{\partial n^k_j}
+$$
+
+At last, calculate s^m :
+
+$$ s^m_i = \frac{\partial \sum^{N^m}_{j=1} (t_j-x^m_j)^2}{\partial n^m_i} = 2(x^m_i-t_i) \frac{\partial x^m_i}{\partial n^m_i}$$
+
+Let
+
+\begin{equation}
+\dot{F^k}_{i,j} =
+\begin{cases}
+\dot{f^k}(x^k_i), & i=j \cr
+0, & i \neq j
+\end{cases}\nonumber
+\end{equation}
+
+\begin{equation}
+X^k_{i,j} =
+\begin{cases}
+x^k_i, & i=j \cr
+0, & i \neq j
+\end{cases}\nonumber
+\end{equation}
+
+
+Then
+$$s^m = 2(x^m-t)\dot{F^m}$$
+$$s^k = s^{k+1}J^k= s^{k+1}(\dot{F^k}V^{k+1} + 2\dot{F^k} X^k U^{k+1} )$$
+
+* Two-spirals problem
+** Problem
+The two-spirals problem is defined as follow:
+
+file:imgs/two-spirals.png
+
+It is extremely hard for traditional network to regress such a pattern.
+
+In the following I will try to use MLQP to solve this problem.
+
+** Net Structure
+
+I try to use a two-layer MLQP network to solve the problem.The first layer
+contains 10 neurons with sigmoid function as transport function.The second layer
+contains 1 neuron with purelin function as transport function.
+
+To avoid the weight matrixes always being symmetry,I gave each cell of them random
+initial values between -1 and 1.
+
+As sigmoid function almost become a constant when x > 5, I use very small \alpha s
+from 0.0001 to 0.001.
+
+** Result
+The trainning result when \alpha = 0.01:
+
+file:imgs/result-0010.png
+
+The trainning result when \alpha = 0.005:
+
+file:imgs/result-0005.png
+
+The trainning result when \alpha = 0.001:
+
+file:imgs/result-0001.png
+
+Each result use a random net and looped for 1000 times

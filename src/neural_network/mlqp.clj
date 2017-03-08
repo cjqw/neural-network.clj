@@ -11,7 +11,7 @@
 
 ;;; Define alpha
 
-(def alpha 0.0010)
+(def alpha 0.0003)
 
 ;; Get input data
 
@@ -107,14 +107,19 @@
        (mapv (fn [x] {:pos x :value (first (first (run-machine net x)))}))
        (mapv (fn [x] (assoc x :value (fun/hardlim (:value x)))))))
 
+(defn- set-value
+  [net {p :pos v :value}]
+  {:pos p
+   :value (fun/hardlim (first (first (run-machine net p))))})
+
 (defn- print-result
-  [net name]
-  (let [data (format-data net)]
+  [net name data-set]
+  (let [data (mapv (partial set-value net) data-set)]
     (save-chart (-> (build-data-chart data :title (str "Result -0." name))
                     view-chart)
                 :file-name (str "result-" name ".png"))))
 
 (defn try-alpha
   [name]
-  (-> (pass-data-set net data 1000)
+  (-> (pass-data-set net data 100)
       (print-result name)))

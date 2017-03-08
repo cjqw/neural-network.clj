@@ -1,4 +1,10 @@
-* neural-network
+* Attention
+This project is no longer maintained.
+
+I will turn to python to write deep learning codes.
+
+There is something wrong with mlqp codes,I am not sure will the error occurs.
+* Neural-network
 
 This is the homework of MPML.
 * ChangeLog
